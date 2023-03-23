@@ -6,29 +6,39 @@ import { Index } from "../components/AddComment";
 import { CommentsBlock } from "../components/CommentsBlock";
 import axios from "../axios";
 
-const getPost = (id, setData, setError) => {
+const getPost = (id, setData, setError, setLoading) => {
   axios.get(`posts/${id}`)
-  .then(res => setData(res.data))
+  .then(res => {
+    setData(res.data)
+  })
+  .then(() => setLoading(false))
   .catch(err => {
     console.log(err)
     setError("Ошибка при получении статьи")
+    setLoading(false)
   })
 };
 
 export const FullPost = () => {
   const [data, setData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const { id } = useParams();
 
   useEffect(() => {
-    getPost(id, setData, setError);
+    getPost(id, setData, setError, setIsLoading);
   }, []);
+
+  if (isLoading) {
+    return <Post isLoading={isLoading} />
+  }
 
   return (
     <>
-      {error === null && <div>{error}</div>}
+      {error === null && !isLoading && <div>{error}</div>}
       {data !== null 
       && error === null
+      && !isLoading
       && (
         <>
           <Post

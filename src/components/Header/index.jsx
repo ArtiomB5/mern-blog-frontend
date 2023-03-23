@@ -4,9 +4,10 @@ import { Link } from "react-router-dom";
 
 import styles from './Header.module.scss';
 import Container from '@mui/material/Container';
+import { useSelector } from 'react-redux';
 
 export const Header = () => {
-  const isAuth = false;
+  const { isAuth } = useSelector(state => state.auth)
 
   const onClickLogout = () => {};
 
