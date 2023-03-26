@@ -5,11 +5,19 @@ import { Link } from "react-router-dom";
 import styles from './Header.module.scss';
 import Container from '@mui/material/Container';
 import { useSelector } from 'react-redux';
+import { logout } from "../../redux/slices/auth"
+import { useDispatch } from 'react-redux';
 
 export const Header = () => {
+  const dispatch = useDispatch()
   const { isAuth } = useSelector(state => state.auth)
 
-  const onClickLogout = () => {};
+  const lsToken = localStorage.getItem('token')
+
+  const logoutHandler = () => {
+    localStorage.removeItem('token')
+    dispatch(logout())
+  }
 
   return (
     <div className={styles.root}>
@@ -19,12 +27,12 @@ export const Header = () => {
             <div>MERN BLOG</div>
           </Link>
           <div className={styles.buttons}>
-            {isAuth ? (
+            {isAuth || lsToken ? (
               <>
                 <Link to="/posts/create">
                   <Button variant="contained">Написать статью</Button>
                 </Link>
-                <Button onClick={onClickLogout} variant="contained" color="error">
+                <Button onClick={logoutHandler} variant="contained" color="error">
                   Выйти
                 </Button>
               </>

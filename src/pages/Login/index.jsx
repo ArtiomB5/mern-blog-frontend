@@ -36,8 +36,14 @@ export const Login = () => {
     }
   }, [isAuth])
 
-  const onSubmit = (values) => {
-    dispatch(fetchAuth(values));
+  const onSubmit = async (values) => {
+    const data = await dispatch(fetchAuth(values));
+    if ('token' in data.payload) {
+      const token = data.payload.token;
+      localStorage.setItem('token', token)
+    } else {
+      alert("Не удалось авторизоваться!")
+    }
   };
 
   return (
